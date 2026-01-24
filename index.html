@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Timetable Generator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { opacity: 0.9; }
+        
+        .content { padding: 30px; }
+        .step { margin-bottom: 30px; }
+        .step h2 { 
+            color: #667eea; 
+            margin-bottom: 15px; 
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .input-group textarea,
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        .input-group textarea:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        .matrix-container {
+            overflow-x: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        td input, td select {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .constraint-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .constraint-section h3 {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .rule-builder {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .rule-builder select,
+        .rule-builder input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .checklist {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            background: white;
+            min-width: 150px;
+        }
+        .checklist label {
+            display: block;
+            padding: 4px 0;
+            cursor: pointer;
+        }
+        .checklist label:hover {
+            background: #f0f0f0;
+        }
+        
+        .schedule-output {
+            margin-top: 30px;
+        }
+        .class-schedule {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .class-schedule h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .schedule-table td {
+            min-width: 80px;
+            height: 50px;
+            font-weight: 500;
+        }
+        .schedule-table td.subject {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            color: #333;
+        }
+        
+        .hidden { display: none; }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            color: #0c5460;
+        }
+        .alert-error {
+            background: #f8d7da;
+            border-left: 4px solid #721c24;
+            color: #721c24;
+        }
+        .alert-success {
+            background: #d4edda;
+            border-left: 4px solid #155724;
+            color: #155724;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏫 School Timetable Generator</h1>
+            <p>Generate optimized timetables for your school with intelligent constraint handling</p>
+        </div>
+        
+        <div class="content">
+            <!-- Step 1: Basic Setup -->
+            <div id="step1" class="step">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2>Step 1: Setup Classes, Subjects & Teachers</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary btn-small" onclick="loadDemo()">Load Demo</button>
+                        <button class="btn btn-small" onclick="loadRealSchoolData()">📚 Load Real School Data</button>
+                    </div>
+                </div>
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Classes (comma-separated)</label>
+                        <textarea id="inputClasses" rows="3" placeholder="6th, 7th, 8th, 9th, 10th"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label>Subjects (comma-separated)</label>
+                        <textarea id="inputSubjects" rows="3" placeholder="Maths, Science, Social, English, Hindi"></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label>Teachers (comma-separated)</label>
+                        <textarea id="inputTeachers" rows="3" placeholder="SNK, HVN, MBL, PET, LAB"></textarea>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="generateMatrix()">Next: Setup Periods →</button>
+            </div>
+            
+            <!-- Step 2: Period Matrix -->
+            <div id="step2" class="step hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>Step 2: Assign Periods & Teachers</h2>
+                    <button class="btn btn-secondary btn-small" onclick="backToStep1()">← Back</button>
+                </div>
+                
+                <p style="margin-bottom: 15px; color: #666;">
+                    Enter the number of periods per week for each subject-class combination and assign a teacher.
+                </p>
+                
+                <div class="matrix-container">
+                    <table id="periodMatrix"></table>
+                </div>
+                
+                <button class="btn" style="margin-top: 20px;" onclick="goToConstraints()">Next: Add Constraints →</button>
+            </div>
+            
+            <!-- Step 3: Constraints -->
+            <div id="step3" class="step hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>Step 3: Define Constraints</h2>
+                    <button class="btn btn-secondary btn-small" onclick="backToStep2()">← Back</button>
+                </div>
+                
+                <div class="constraint-section">
+                    <h3>1. Teacher Workload Limit</h3>
+                    <div class="rule-builder">
+                        <span>No teacher should teach more than</span>
+                        <input type="number" id="maxConsecutive" placeholder="8" min="1" max="8" style="width: 80px;">
+                        <span>consecutive periods</span>
+                    </div>
+                </div>
+                
+                <div class="constraint-section">
+                    <h3>2. Fixed Sessions (Multiple Classes Together)</h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+                        Use this for activities like Mass Drill, Yoga, or Assembly where multiple classes meet together at the same time.
+                    </p>
+                    <div id="fixedRules"></div>
+                    <button class="btn btn-secondary btn-small" onclick="addFixedRule()">+ Add Fixed Session</button>
+                </div>
+                
+                <div class="constraint-section">
+                    <h3>3. Period Placement Rules</h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+                        Control where specific subjects can or cannot be scheduled (e.g., "ICT should be in Period 3" or "Maths should not be in Period 8").
+                    </p>
+                    <div id="placementRules"></div>
+                    <button class="btn btn-secondary btn-small" onclick="addPlacementRule()">+ Add Placement Rule</button>
+                </div>
+                
+                <button class="btn" style="margin-top: 20px; width: 100%; padding: 15px; font-size: 18px;" onclick="generateTimetable()">
+                    ✨ Generate Timetable
+                </button>
+            </div>
+            
+            <!-- Results -->
+            <div id="results" class="step hidden">
+                <h2>Generated Timetables</h2>
+                <div id="scheduleOutput"></div>
+                <button class="btn btn-secondary" onclick="backToStep3()">← Modify Constraints</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let classes = [], subjects = [], teachers = [];
+        const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        
+        function parseList(id) {
+            return document.getElementById(id).value
+                .split(',')
+                .map(s => s.trim())
+                .filter(s => s);
+        }
+        
+        function loadDemo() {
+            document.getElementById('inputClasses').value = '6th, 7th, 8th';
+            document.getElementById('inputSubjects').value = 'Maths, Science, Social, Tel, Eng, MD, ICT';
+            document.getElementById('inputTeachers').value = 'SNK, HVN, MBL, PET, LAB';
+        }
+        
+        function loadRealSchoolData() {
+            // Load complete data from WA.pdf
+            document.getElementById('inputClasses').value = '6th, 7th, 8th, 9th, 10th';
+            document.getElementById('inputSubjects').value = 'Tel, Hin, Eng, Maths, GS, SS, BS, PS, Yoga, Games, MD, HE, Safety, Lib, A&C, ICT, WE, EMDP, CG';
+            document.getElementById('inputTeachers').value = 'HM, BSJ, HVN, NP, MBL, SNK, MKV, MNR, BMR, ML';
+            
+            // Generate matrix first
+            generateMatrix();
+            
+            // Wait for DOM to render, then fill in all the data
+            setTimeout(() => {
+                // 6th Class
+                setCell('6th', 'Tel', 6, 'MBL');
+                setCell('6th', 'Hin', 5, 'HVN');
+                setCell('6th', 'Eng', 6, 'HVN');
+                setCell('6th', 'Maths', 8, 'SNK');
+                setCell('6th', 'GS', 7, 'HVN');
+                setCell('6th', 'SS', 6, 'NP');
+                setCell('6th', 'Yoga', 1, 'BSJ');
+                setCell('6th', 'Games', 1, 'BSJ');
+                setCell('6th', 'MD', 1, 'BSJ');
+                setCell('6th', 'HE', 1, 'MKV');
+                setCell('6th', 'Safety', 1, 'HM');
+                setCell('6th', 'Lib', 1, 'MNR');
+                setCell('6th', 'A&C', 1, 'BMR');
+                setCell('6th', 'ICT', 1, 'ML');
+                setCell('6th', 'WE', 1, 'MKV');
+                
+                // 7th Class
+                setCell('7th', 'Tel', 6, 'MBL');
+                setCell('7th', 'Hin', 5, 'HVN');
+                setCell('7th', 'Eng', 6, 'HVN');
+                setCell('7th', 'Maths', 8, 'SNK');
+                setCell('7th', 'GS', 7, 'HVN');
+                setCell('7th', 'SS', 6, 'NP');
+                setCell('7th', 'Yoga', 1, 'BSJ');
+                setCell('7th', 'Games', 1, 'BSJ');
+                setCell('7th', 'MD', 1, 'BSJ');
+                setCell('7th', 'HE', 1, 'MKV');
+                setCell('7th', 'Safety', 1, 'HM');
+                setCell('7th', 'Lib', 1, 'MNR');
+                setCell('7th', 'A&C', 1, 'BMR');
+                setCell('7th', 'ICT', 1, 'ML');
+                setCell('7th', 'WE', 1, 'MKV');
+                
+                // 8th Class
+                setCell('8th', 'Tel', 6, 'MBL');
+                setCell('8th', 'Hin', 5, 'HVN');
+                setCell('8th', 'Eng', 6, 'HVN');
+                setCell('8th', 'Maths', 8, 'SNK');
+                setCell('8th', 'BS', 4, 'NP');
+                setCell('8th', 'PS', 5, 'NP');
+                setCell('8th', 'SS', 6, 'NP');
+                setCell('8th', 'Yoga', 1, 'BSJ');
+                setCell('8th', 'Games', 1, 'BSJ');
+                setCell('8th', 'MD', 1, 'BSJ');
+                setCell('8th', 'HE', 1, 'MKV');
+                setCell('8th', 'Safety', 1, 'HM');
+                setCell('8th', 'Lib', 1, 'MNR');
+                setCell('8th', 'A&C', 1, 'BMR');
+                setCell('8th', 'ICT', 1, 'ML');
+                
+                // 9th Class
+                setCell('9th', 'Tel', 6, 'MBL');
+                setCell('9th', 'Hin', 5, 'HVN');
+                setCell('9th', 'Eng', 6, 'HVN');
+                setCell('9th', 'Maths', 8, 'SNK');
+                setCell('9th', 'BS', 4, 'NP');
+                setCell('9th', 'PS', 6, 'NP');
+                setCell('9th', 'SS', 6, 'NP');
+                setCell('9th', 'EMDP', 1, 'MKV');
+                setCell('9th', 'Yoga', 1, 'BSJ');
+                setCell('9th', 'Games', 1, 'BSJ');
+                setCell('9th', 'MD', 1, 'BSJ');
+                setCell('9th', 'HE', 1, 'MKV');
+                setCell('9th', 'A&C', 1, 'BMR');
+                setCell('9th', 'ICT', 1, 'ML');
+                
+                // 10th Class
+                setCell('10th', 'Tel', 6, 'MBL');
+                setCell('10th', 'Hin', 5, 'HVN');
+                setCell('10th', 'Eng', 6, 'HVN');
+                setCell('10th', 'Maths', 8, 'SNK');
+                setCell('10th', 'BS', 4, 'NP');
+                setCell('10th', 'PS', 6, 'NP');
+                setCell('10th', 'SS', 6, 'NP');
+                setCell('10th', 'Yoga', 1, 'BSJ');
+                setCell('10th', 'Games', 1, 'BSJ');
+                setCell('10th', 'MD', 1, 'BSJ');
+                setCell('10th', 'HE', 1, 'MKV');
+                setCell('10th', 'A&C', 1, 'BMR');
+                setCell('10th', 'ICT', 1, 'ML');
+                setCell('10th', 'CG', 1, 'HM');
+                
+                alert('✓ Real school data loaded!\n\nAll 5 classes with complete period assignments from WA.pdf.\n\nClick "Next: Add Constraints" to continue.');
+            }, 200);
+        }
+        
+        function setCell(cls, sub, count, teacher) {
+            const countInput = document.getElementById(`count_${cls}_${sub}`);
+            const teacherSelect = document.getElementById(`teacher_${cls}_${sub}`);
+            if (countInput && teacherSelect) {
+                countInput.value = count;
+                teacherSelect.value = teacher;
+            }
+        }
+        
+        function generateMatrix() {
+            classes = parseList('inputClasses');
+            subjects = parseList('inputSubjects');
+            teachers = parseList('inputTeachers');
+            
+            if (!classes.length || !subjects.length || !teachers.length) {
+                alert('Please fill in all three fields (Classes, Subjects, Teachers)');
+                return;
+            }
+            
+            const table = document.getElementById('periodMatrix');
+            let html = '<thead><tr><th>Subject \\ Class</th>';
+            classes.forEach(c => html += `<th>${c}</th>`);
+            html += '</tr></thead><tbody>';
+            
+            subjects.forEach(sub => {
+                html += `<tr><td><strong>${sub}</strong></td>`;
+                classes.forEach(cls => {
+                    const teacherOptions = teachers.map(t => `<option value="${t}">${t}</option>`).join('');
+                    html += `<td>
+                        <input type="number" id="count_${cls}_${sub}" min="0" max="48" placeholder="0" style="margin-bottom: 4px;">
+                        <select id="teacher_${cls}_${sub}">
+                            <option value="">--Select--</option>
+                            ${teacherOptions}
+                        </select>
+                    </td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody>';
+            table.innerHTML = html;
+            
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        }
+        
+        function backToStep1() {
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+        }
+        
+        function goToConstraints() {
+            // Validate that periods are assigned
+            let hasData = false;
+            subjects.forEach(sub => {
+                classes.forEach(cls => {
+                    const count = parseInt(document.getElementById(`count_${cls}_${sub}`).value) || 0;
+                    if (count > 0) hasData = true;
+                });
+            });
+            
+            if (!hasData) {
+                alert('Please assign at least some periods before continuing');
+                return;
+            }
+            
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+        }
+        
+        function backToStep2() {
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+        }
+        
+        function backToStep3() {
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+        }
+        
+        function addFixedRule() {
+            const container = document.getElementById('fixedRules');
+            const ruleId = Date.now();
+            
+            const subjectOptions = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+            const dayOptions = DAYS.map((d, i) => `<option value="${i}">${d}</option>`).join('');
+            const periodOptions = Array.from({length: 8}, (_, i) => `<option value="${i+1}">Period ${i+1}</option>`).join('');
+            
+            let classCheckboxes = '<div class="checklist"><strong>Classes:</strong><br>';
+            classes.forEach(c => {
+                classCheckboxes += `<label><input type="checkbox" class="fixed-cls-${ruleId}" value="${c}"> ${c}</label>`;
+            });
+            classCheckboxes += '</div>';
+            
+            const rule = document.createElement('div');
+            rule.className = 'rule-builder';
+            rule.innerHTML = `
+                <select class="fixed-subject">${subjectOptions}</select>
+                <span>on</span>
+                <select class="fixed-day">${dayOptions}</select>
+                <select class="fixed-period">${periodOptions}</select>
+                <span>for</span>
+                ${classCheckboxes}
+                <span>together</span>
+                <button class="btn btn-secondary btn-small" style="background: #dc3545; color: white; border: none;" onclick="this.parentElement.remove()">Remove</button>
+            `;
+            container.appendChild(rule);
+        }
+        
+        function addPlacementRule() {
+            const container = document.getElementById('placementRules');
+            const ruleId = Date.now();
+            
+            let subjectCheckboxes = '<div class="checklist"><strong>Subjects:</strong><br>';
+            subjects.forEach(s => {
+                subjectCheckboxes += `<label><input type="checkbox" class="place-sub-${ruleId}" value="${s}"> ${s}</label>`;
+            });
+            subjectCheckboxes += '</div>';
+            
+            const periodOptions = Array.from({length: 8}, (_, i) => `<option value="${i+1}">Period ${i+1}</option>`).join('');
+            
+            let classCheckboxes = '<div class="checklist"><strong>Classes:</strong><br>';
+            classes.forEach(c => {
+                classCheckboxes += `<label><input type="checkbox" class="place-cls-${ruleId}" value="${c}"> ${c}</label>`;
+            });
+            classCheckboxes += '</div>';
+            
+            const rule = document.createElement('div');
+            rule.className = 'rule-builder';
+            rule.innerHTML = `
+                ${subjectCheckboxes}
+                <select class="place-type">
+                    <option value="should_be">SHOULD BE in</option>
+                    <option value="should_not">SHOULD NOT be in</option>
+                </select>
+                <select class="place-period">${periodOptions}</select>
+                <span>for</span>
+                ${classCheckboxes}
+                <button class="btn btn-secondary btn-small" style="background: #dc3545; color: white; border: none;" onclick="this.parentElement.remove()">Remove</button>
+            `;
+            container.appendChild(rule);
+        }
+        
+        async function generateTimetable() {
+            // Collect data
+            const demand = {};
+            const teacherMap = {};
+            
+            classes.forEach(cls => {
+                demand[cls] = {};
+                teacherMap[cls] = {};
+            });
+            
+            // Collect period counts and teachers
+            let hasAssignment = false;
+            subjects.forEach(sub => {
+                classes.forEach(cls => {
+                    const count = parseInt(document.getElementById(`count_${cls}_${sub}`).value) || 0;
+                    const teacher = document.getElementById(`teacher_${cls}_${sub}`).value;
+                    
+                    if (count > 0) {
+                        if (!teacher) {
+                            alert(`Please select a teacher for ${sub} in ${cls}`);
+                            throw new Error('Missing teacher');
+                        }
+                        demand[cls][sub] = count;
+                        teacherMap[cls][sub] = teacher;
+                        hasAssignment = true;
+                    }
+                });
+            });
+            
+            if (!hasAssignment) {
+                alert('Please assign at least one subject to generate a timetable');
+                return;
+            }
+            
+            // Collect constraints
+            const constraints = {
+                max_consecutive: parseInt(document.getElementById('maxConsecutive').value) || 8,
+                fixed_sessions: [],
+                placement_rules: []
+            };
+            
+            // Fixed sessions
+            document.querySelectorAll('#fixedRules .rule-builder').forEach(rule => {
+                const subject = rule.querySelector('.fixed-subject').value;
+                const day = parseInt(rule.querySelector('.fixed-day').value);
+                const period = parseInt(rule.querySelector('.fixed-period').value) - 1;
+                const selectedClasses = Array.from(rule.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+                
+                if (selectedClasses.length > 0) {
+                    constraints.fixed_sessions.push({ subject, day, period, classes: selectedClasses });
+                }
+            });
+            
+            // Placement rules
+            document.querySelectorAll('#placementRules .rule-builder').forEach(rule => {
+                const selectedSubjects = Array.from(rule.querySelectorAll('input[type="checkbox"]:checked')).filter(cb => cb.className.includes('place-sub')).map(cb => cb.value);
+                const type = rule.querySelector('.place-type').value;
+                const period = parseInt(rule.querySelector('.place-period').value) - 1;
+                const selectedClasses = Array.from(rule.querySelectorAll('input[type="checkbox"]:checked')).filter(cb => cb.className.includes('place-cls')).map(cb => cb.value);
+                
+                if (selectedSubjects.length > 0 && selectedClasses.length > 0) {
+                    constraints.placement_rules.push({ subjects: selectedSubjects, type, period, classes: selectedClasses });
+                }
+            });
+            
+            const payload = {
+                classes,
+                teachers: teacherMap,
+                demand,
+                constraints
+            };
+            
+            // Show loading
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('scheduleOutput').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <h3>Generating your timetable...</h3>
+                    <p>This may take a moment as we optimize the schedule.</p>
+                </div>
+            `;
+            
+            // Call solver (simulated for now - you'll connect to your Python backend)
+            try {
+                const response = await fetch('http://127.0.0.1:5000/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displaySchedule(data.schedule);
+                } else {
+                    document.getElementById('scheduleOutput').innerHTML = `
+                        <div class="alert alert-error">
+                            <strong>Failed to generate timetable</strong><br>
+                            ${data.message || 'The constraints are too strict. Try relaxing some rules.'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('scheduleOutput').innerHTML = `
+                    <div class="alert alert-error">
+                        <strong>Server Error</strong><br>
+                        Could not connect to the backend server. Make sure Python server is running on port 5000.<br>
+                        <code>${error.message}</code>
+                    </div>
+                `;
+            }
+        }
+        
+        function displaySchedule(schedule) {
+            let html = '<div class="alert alert-success">Timetable generated successfully!</div>';
+            
+            classes.forEach(cls => {
+                html += `<div class="class-schedule">
+                    <h3>Class ${cls}</h3>
+                    <div class="matrix-container">
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    ${Array.from({length: 8}, (_, i) => `<th>P${i+1}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                
+                for (let day = 0; day < 6; day++) {
+                    html += `<tr><th>${DAYS[day]}</th>`;
+                    const daySchedule = schedule[cls][day] || Array(8).fill(null);
+                    daySchedule.forEach(subject => {
+                        html += `<td class="${subject ? 'subject' : ''}">${subject || '-'}</td>`;
+                    });
+                    html += '</tr>';
+                }
+                
+                html += `</tbody></table></div></div>`;
+            });
+            
+            document.getElementById('scheduleOutput').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
