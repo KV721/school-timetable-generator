@@ -356,9 +356,9 @@
         }
         
         function loadRealSchoolData() {
-            // Load complete data from WA.pdf
+            // Load complete data from WA.pdf (corrected based on actual data)
             document.getElementById('inputClasses').value = '6th, 7th, 8th, 9th, 10th';
-            document.getElementById('inputSubjects').value = 'Tel, Hin, Eng, Maths, GS, SS, BS, PS, Yoga, Games, MD, HE, Safety, Lib, A&C, ICT, WE, EMDP, CG';
+            document.getElementById('inputSubjects').value = 'Tel, Hin, Eng, Maths, GS, SS, BS, PS, Yoga, Games, MD, HE, Safety, Lib, A&C, ICT, ICT2, WE, EMDP, CG';
             document.getElementById('inputTeachers').value = 'HM, BSJ, HVN, NP, MBL, SNK, MKV, MNR, BMR, ML';
             
             // Generate matrix first
@@ -367,89 +367,91 @@
             // Wait for DOM to render, then fill in all the data
             setTimeout(() => {
                 // 6th Class
-                setCell('6th', 'Tel', 6, 'MBL');
-                setCell('6th', 'Hin', 5, 'HVN');
-                setCell('6th', 'Eng', 6, 'HVN');
+                setCell('6th', 'Tel', 6, 'MNR');
+                setCell('6th', 'Hin', 5, 'MKV');
+                setCell('6th', 'Eng', 6, 'BSJ');
                 setCell('6th', 'Maths', 8, 'SNK');
-                setCell('6th', 'GS', 7, 'HVN');
-                setCell('6th', 'SS', 6, 'NP');
-                setCell('6th', 'Yoga', 1, 'BSJ');
-                setCell('6th', 'Games', 1, 'BSJ');
-                setCell('6th', 'MD', 1, 'BSJ');
-                setCell('6th', 'HE', 1, 'MKV');
-                setCell('6th', 'Safety', 1, 'HM');
-                setCell('6th', 'Lib', 1, 'MNR');
-                setCell('6th', 'A&C', 1, 'BMR');
+                setCell('6th', 'GS', 7, 'NP');
+                setCell('6th', 'SS', 6, 'MBL');
+                setCell('6th', 'Yoga', 1, 'BMR');
+                setCell('6th', 'Games', 1, 'BMR');
+                setCell('6th', 'MD', 1, 'BMR');
+                setCell('6th', 'HE', 1, 'BMR');
+                setCell('6th', 'Safety', 1, 'BMR');
+                setCell('6th', 'Lib', 1, 'ML');
+                setCell('6th', 'A&C', 1, 'ML');
                 setCell('6th', 'ICT', 1, 'ML');
-                setCell('6th', 'WE', 1, 'MKV');
+                setCell('6th', 'ICT2', 1, 'HM');
+                setCell('6th', 'WE', 1, 'HM');
                 
                 // 7th Class
-                setCell('7th', 'Tel', 6, 'MBL');
-                setCell('7th', 'Hin', 5, 'HVN');
-                setCell('7th', 'Eng', 6, 'HVN');
-                setCell('7th', 'Maths', 8, 'SNK');
-                setCell('7th', 'GS', 7, 'HVN');
-                setCell('7th', 'SS', 6, 'NP');
-                setCell('7th', 'Yoga', 1, 'BSJ');
-                setCell('7th', 'Games', 1, 'BSJ');
-                setCell('7th', 'MD', 1, 'BSJ');
-                setCell('7th', 'HE', 1, 'MKV');
-                setCell('7th', 'Safety', 1, 'HM');
-                setCell('7th', 'Lib', 1, 'MNR');
-                setCell('7th', 'A&C', 1, 'BMR');
+                setCell('7th', 'Tel', 6, 'MNR');
+                setCell('7th', 'Hin', 5, 'MKV');
+                setCell('7th', 'Eng', 6, 'BSJ');
+                setCell('7th', 'Maths', 8, 'HVN');
+                setCell('7th', 'GS', 7, 'NP');
+                setCell('7th', 'SS', 6, 'MBL');
+                setCell('7th', 'Yoga', 1, 'BMR');
+                setCell('7th', 'Games', 1, 'BMR');
+                setCell('7th', 'MD', 1, 'BMR');
+                setCell('7th', 'HE', 1, 'BMR');
+                setCell('7th', 'Safety', 1, 'BMR');
+                setCell('7th', 'Lib', 1, 'ML');
+                setCell('7th', 'A&C', 1, 'ML');
                 setCell('7th', 'ICT', 1, 'ML');
-                setCell('7th', 'WE', 1, 'MKV');
+                setCell('7th', 'ICT2', 1, 'HM');
+                setCell('7th', 'WE', 1, 'HM');
                 
                 // 8th Class
-                setCell('8th', 'Tel', 6, 'MBL');
-                setCell('8th', 'Hin', 5, 'HVN');
-                setCell('8th', 'Eng', 6, 'HVN');
+                setCell('8th', 'Tel', 6, 'MNR');
+                setCell('8th', 'Hin', 5, 'MKV');
+                setCell('8th', 'Eng', 6, 'BSJ');
                 setCell('8th', 'Maths', 8, 'SNK');
                 setCell('8th', 'BS', 4, 'NP');
-                setCell('8th', 'PS', 5, 'NP');
-                setCell('8th', 'SS', 6, 'NP');
-                setCell('8th', 'Yoga', 1, 'BSJ');
-                setCell('8th', 'Games', 1, 'BSJ');
-                setCell('8th', 'MD', 1, 'BSJ');
-                setCell('8th', 'HE', 1, 'MKV');
-                setCell('8th', 'Safety', 1, 'HM');
-                setCell('8th', 'Lib', 1, 'MNR');
-                setCell('8th', 'A&C', 1, 'BMR');
+                setCell('8th', 'PS', 5, 'HVN');
+                setCell('8th', 'SS', 6, 'MBL');
+                setCell('8th', 'Yoga', 1, 'BMR');
+                setCell('8th', 'MD', 1, 'BMR');
+                setCell('8th', 'HE', 1, 'BMR');
+                setCell('8th', 'Lib', 1, 'ML');
+                setCell('8th', 'A&C', 1, 'ML');
                 setCell('8th', 'ICT', 1, 'ML');
+                setCell('8th', 'ICT2', 1, 'HM');
+                setCell('8th', 'WE', 1, 'HM');
                 
                 // 9th Class
-                setCell('9th', 'Tel', 6, 'MBL');
-                setCell('9th', 'Hin', 5, 'HVN');
-                setCell('9th', 'Eng', 6, 'HVN');
+                setCell('9th', 'Tel', 6, 'MNR');
+                setCell('9th', 'Hin', 5, 'MKV');
+                setCell('9th', 'Eng', 6, 'BSJ');
                 setCell('9th', 'Maths', 8, 'SNK');
                 setCell('9th', 'BS', 4, 'NP');
-                setCell('9th', 'PS', 6, 'NP');
-                setCell('9th', 'SS', 6, 'NP');
-                setCell('9th', 'EMDP', 1, 'MKV');
-                setCell('9th', 'Yoga', 1, 'BSJ');
-                setCell('9th', 'Games', 1, 'BSJ');
-                setCell('9th', 'MD', 1, 'BSJ');
-                setCell('9th', 'HE', 1, 'MKV');
-                setCell('9th', 'A&C', 1, 'BMR');
+                setCell('9th', 'PS', 6, 'HVN');
+                setCell('9th', 'SS', 6, 'MBL');
+                setCell('9th', 'Yoga', 1, 'BMR');
+                setCell('9th', 'MD', 1, 'BMR');
+                setCell('9th', 'HE', 1, 'BMR');
+                setCell('9th', 'A&C', 1, 'ML');
                 setCell('9th', 'ICT', 1, 'ML');
+                setCell('9th', 'ICT2', 1, 'HM');
+                setCell('9th', 'EMDP', 1, 'HVN');
                 
                 // 10th Class
-                setCell('10th', 'Tel', 6, 'MBL');
-                setCell('10th', 'Hin', 5, 'HVN');
-                setCell('10th', 'Eng', 6, 'HVN');
+                setCell('10th', 'Tel', 6, 'MNR');
+                setCell('10th', 'Hin', 5, 'MKV');
+                setCell('10th', 'Eng', 6, 'BSJ');
                 setCell('10th', 'Maths', 8, 'SNK');
                 setCell('10th', 'BS', 4, 'NP');
-                setCell('10th', 'PS', 6, 'NP');
-                setCell('10th', 'SS', 6, 'NP');
-                setCell('10th', 'Yoga', 1, 'BSJ');
-                setCell('10th', 'Games', 1, 'BSJ');
-                setCell('10th', 'MD', 1, 'BSJ');
-                setCell('10th', 'HE', 1, 'MKV');
-                setCell('10th', 'A&C', 1, 'BMR');
+                setCell('10th', 'PS', 6, 'HVN');
+                setCell('10th', 'SS', 6, 'MBL');
+                setCell('10th', 'Yoga', 1, 'BMR');
+                setCell('10th', 'MD', 1, 'BMR');
+                setCell('10th', 'HE', 1, 'BMR');
+                setCell('10th', 'A&C', 1, 'ML');
                 setCell('10th', 'ICT', 1, 'ML');
+                setCell('10th', 'ICT2', 1, 'HM');
                 setCell('10th', 'CG', 1, 'HM');
                 
-                alert('✓ Real school data loaded!\n\nAll 5 classes with complete period assignments from WA.pdf.\n\nClick "Next: Add Constraints" to continue.');
+                alert('✓ Real school data loaded!\n\nAll 5 classes with complete period assignments.\n\nClick "Next: Add Constraints" to continue.');
             }, 200);
         }
         
