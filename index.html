@@ -339,7 +339,7 @@
     </div>
     
     <script>
-        let classes = [], subjects = [], teachers = [];
+        let classes = [], subjects = [], teachers = [], teacherMap = {};
         const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         
         function parseList(id) {
@@ -600,7 +600,7 @@
         async function generateTimetable() {
             // Collect data
             const demand = {};
-            const teacherMap = {};
+            teacherMap = {};
             
             classes.forEach(cls => {
                 demand[cls] = {};
@@ -731,7 +731,12 @@
                     html += `<tr><th>${DAYS[day]}</th>`;
                     const daySchedule = schedule[cls][day] || Array(8).fill(null);
                     daySchedule.forEach(subject => {
-                        html += `<td class="${subject ? 'subject' : ''}">${subject || '-'}</td>`;
+                        if (subject) {
+                            const teacher = teacherMap[cls] && teacherMap[cls][subject] ? teacherMap[cls][subject] : '';
+                            html += `<td class="subject"><div style="font-weight:600">${subject}</div><div style="font-size:11px;color:#666">${teacher}</div></td>`;
+                        } else {
+                            html += `<td>-</td>`;
+                        }
                     });
                     html += '</tr>';
                 }

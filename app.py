@@ -96,11 +96,7 @@ def generate_timetable():
         # Create solver and attempt to solve
         solver = TimetableSolver(data)
         
-        # Use more attempts for complex schedules
-        num_classes = len(data['classes'])
-        max_attempts = 200 if num_classes >= 4 else 100
-        
-        if solver.solve(max_attempts=max_attempts):
+        if solver.solve(max_attempts=300):
             schedule = solver.get_schedule()
             
             print("\n✓ Timetable generated successfully!")
