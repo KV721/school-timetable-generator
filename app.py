@@ -1,10 +1,16 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from solver import TimetableSolver
 import traceback
+import os
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend
+app = Flask(__name__, static_folder='.')
+CORS(app)
+
+
+@app.route('/')
+def index():
+    return send_from_directory('.', 'index.html')
 
 @app.route('/generate', methods=['POST'])
 def generate_timetable():
@@ -218,10 +224,12 @@ def health_check():
     return jsonify({"status": "healthy", "message": "Server is running"})
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_ENV') != 'production'
     print("\n" + "="*60)
     print("  School Timetable Generator - Backend Server")
     print("="*60)
-    print("\nServer starting on http://127.0.0.1:5000")
+    print(f"\nServer starting on http://0.0.0.0:{port}")
     print("Press CTRL+C to stop\n")
-    
-    app.run(debug=True, port=5000, host='127.0.0.1')
+
+    app.run(debug=debug, port=port, host='0.0.0.0')
