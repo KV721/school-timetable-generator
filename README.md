@@ -1,5 +1,7 @@
 # School Timetable Generator
 
+**Live demo:** [school-timetable-generator-gqyu.onrender.com](https://school-timetable-generator-gqyu.onrender.com/)
+
 A web-based timetable generator for Indian government schools, built for the Indian classroom model where students stay in one room and teachers rotate between classes.
 
 ## Features
@@ -88,7 +90,7 @@ Use for activities where multiple classes are in the same place at the same time
 
 ### Step 4: Generate
 
-Click **✨ Generate Timetable**. The solver typically finds a perfect solution in under a second.
+Click **Generate Timetable**. The solver typically finds a perfect solution in under a second.
 
 ## Built-in Scheduling Rules
 
