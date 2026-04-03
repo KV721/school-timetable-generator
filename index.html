@@ -6,9 +6,9 @@
     <title>School Timetable Generator</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0ede6;
             min-height: 100vh;
             padding: 20px;
         }
@@ -17,11 +17,11 @@
             margin: 0 auto; 
             background: white;
             border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px rgba(60, 80, 60, 0.15);
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a7a5a 0%, #3d5e3d 100%);
             color: white;
             padding: 30px;
             text-align: center;
@@ -31,11 +31,11 @@
         
         .content { padding: 30px; }
         .step { margin-bottom: 30px; }
-        .step h2 { 
-            color: #667eea; 
-            margin-bottom: 15px; 
+        .step h2 {
+            color: #3d5e3d;
+            margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 2px solid #d4e0d4;
         }
         
         .input-grid {
@@ -63,11 +63,11 @@
         .input-group textarea:focus,
         .input-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #5a7a5a;
         }
         
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #5a7a5a 0%, #3d5e3d 100%);
             color: white;
             border: none;
             padding: 12px 30px;
@@ -79,12 +79,12 @@
         }
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(61, 94, 61, 0.4);
         }
         .btn-secondary {
             background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            color: #5a7a5a;
+            border: 2px solid #5a7a5a;
         }
         .btn-secondary:hover {
             background: #f0f0f0;
@@ -111,9 +111,9 @@
             border: 1px solid #e0e0e0;
         }
         th {
-            background: #f8f9fa;
+            background: #e8f0e8;
             font-weight: 600;
-            color: #333;
+            color: #3d5e3d;
         }
         td input, td select {
             width: 100%;
@@ -124,7 +124,7 @@
         }
         
         .constraint-section {
-            background: #f8f9fa;
+            background: #f0ede6;
             padding: 20px;
             border-radius: 8px;
             margin-top: 20px;
@@ -182,7 +182,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .class-schedule h3 {
-            color: #667eea;
+            color: #5a7a5a;
             margin-bottom: 15px;
         }
         .schedule-table td {
@@ -191,7 +191,7 @@
             font-weight: 500;
         }
         .schedule-table td.subject {
-            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            background: #eef4ee;
             color: #333;
         }
         
@@ -223,7 +223,7 @@
         }
         .spinner {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border-top: 4px solid #5a7a5a;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -239,7 +239,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏫 School Timetable Generator</h1>
+            <h1>School Timetable Generator</h1>
             <p>Generate optimized timetables for your school with intelligent constraint handling</p>
         </div>
         
@@ -250,7 +250,7 @@
                     <h2>Step 1: Setup Classes, Subjects & Teachers</h2>
                     <div style="display: flex; gap: 10px;">
                         <button class="btn btn-secondary btn-small" onclick="loadDemo()">Load Demo</button>
-                        <button class="btn btn-small" onclick="loadRealSchoolData()">📚 Load Real School Data</button>
+                        <button class="btn btn-small" onclick="loadRealSchoolData()">Load Real School Data</button>
                     </div>
                 </div>
                 
@@ -325,7 +325,7 @@
                 </div>
                 
                 <button class="btn" style="margin-top: 20px; width: 100%; padding: 15px; font-size: 18px;" onclick="generateTimetable()">
-                    ✨ Generate Timetable
+                    Generate Timetable
                 </button>
             </div>
             
@@ -451,7 +451,7 @@
                 setCell('10th', 'ICT2', 1, 'HM');
                 setCell('10th', 'CG', 1, 'HM');
                 
-                alert('✓ Real school data loaded!\n\nAll 5 classes with complete period assignments.\n\nClick "Next: Add Constraints" to continue.');
+                alert('Real school data loaded.\n\nAll 5 classes with complete period assignments.\n\nClick "Next: Add Constraints" to continue.');
             }, 200);
         }
         
